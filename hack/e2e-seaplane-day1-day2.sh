@@ -32,6 +32,7 @@ E2E_SEAPLANE_TIMEOUT="${E2E_SEAPLANE_TIMEOUT:-4h}"
 E2E_SEAPLANE_DESTROY="${E2E_SEAPLANE_DESTROY:-true}"
 E2E_SEAPLANE_KEEP_CLUSTER="${E2E_SEAPLANE_KEEP_CLUSTER:-false}"
 E2E_SEAPLANE_CONTINUE_ON_FAILURE="${E2E_SEAPLANE_CONTINUE_ON_FAILURE:-false}"
+E2E_SEAPLANE_RUN_SHARED="${E2E_SEAPLANE_RUN_SHARED:-true}"
 
 mkdir -p "${SHARED_DIR}" "${ARTIFACT_DIR}"
 export OCM_CONFIG="${OCM_CONFIG:-${SHARED_DIR}/rosa-config.json}"
@@ -90,10 +91,14 @@ run_filter() {
 run_phase() {
 	local phase="$1"
 	local filter
+	local shared_filter=""
+	if [[ "${E2E_SEAPLANE_RUN_SHARED}" != "true" ]]; then
+		shared_filter=" && !seaplane-shared"
+	fi
 	if [[ "${phase}" == "destroy" ]]; then
-		filter="destroy && seaplane-validated && !seaplane-na && !seaplane-deferred"
+		filter="destroy && seaplane-validated && !seaplane-na && !seaplane-deferred${shared_filter}"
 	else
-		filter="(${phase}) && seaplane-validated && !seaplane-na && !seaplane-deferred"
+		filter="(${phase}) && seaplane-validated && !seaplane-na && !seaplane-deferred${shared_filter}"
 	fi
 	run_filter "${phase}" "${filter}"
 }

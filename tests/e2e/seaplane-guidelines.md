@@ -169,8 +169,7 @@ Each profile runs in its own Ginkgo process with a generated cluster name and
 an isolated directory under `tests/output/<profile>/`. `OCP_IMAGE` or
 `SEAPLANE_VERSION` is required for profiles whose `version` is not a release
 image pullspec (`rosa-seaplane-advanced` and `rosa-seaplane-private` currently
-use `latest`). See `tests/e2e/seaplane-profile-matrix.md` for profile-specific
-test targets.
+use `latest`).
 
 This runs these phases in order, reusing one cluster and the same
 `SHARED_DIR`/`ARTIFACT_DIR`:
